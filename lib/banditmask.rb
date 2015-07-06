@@ -1,4 +1,5 @@
-require "banditmask/version"
+require 'banditmask/version'
+require 'banditmask/banditry'
 
 class BanditMask
   attr_reader :mask

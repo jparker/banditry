@@ -35,7 +35,7 @@ end
 ChmodMask.bits # => { :read => 1, :write => 2, :execute => 4 }
 ```
 
-To instantiate a new mask class:
+Instantiate a new mask class:
 
 ```ruby
 mask = ChmodMask.new
@@ -62,6 +62,42 @@ Retrieve a list of all currently enabled bits.
 
 ```ruby
 mask.names # => [:read, :write]
+```
+
+Use `BanditMask::Banditry` to add accessor methods to a class that has a
+bitmask attribute.
+
+```ruby
+class ObjectWithBitmaskAttribute
+  attr_accessor :bitmask
+
+  extend BanditMask::Banditry
+  mask :bitmask, as: :bits, with: ChmodMask
+end
+
+obj = ObjectWithBitmaskAttribute.new
+obj.bitmask = 0b011
+```
+
+This gives you a reader method which delegates to `BanditMask#names`.
+
+```ruby
+obj.bits # => [:read, :write]
+```
+
+It also gives you a writer method which lets you replace the overwrite bitmask.
+
+```ruby
+obj.bits = [:read, :execute]
+obj.bitmask # => 5
+```
+
+Finally, it gives you a query method for checking whether a particular bit is
+set on the bitmask.
+
+```ruby
+obj.has? :read  # => true
+obj.has? :write # => false
 ```
 
 ## Development

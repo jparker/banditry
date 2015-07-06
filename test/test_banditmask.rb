@@ -1,6 +1,6 @@
 require 'minitest_helper'
 
-class TestBanditMask < Minitest::Test
+class TestBanditMask < Minitest::Test # :nodoc:
   def teardown
     BanditMask.reset_bits!
   end
