@@ -2,10 +2,10 @@ require 'banditmask/version'
 require 'banditmask/banditry'
 
 class BanditMask
-  attr_reader :mask
+  attr_reader :bitmask
 
-  def initialize(mask = 0b0) # :nodoc:
-    @mask = mask
+  def initialize(bitmask = 0b0) # :nodoc:
+    @bitmask = bitmask
   end
 
   ##
@@ -36,7 +36,7 @@ class BanditMask
   ##
   # Returns integer value of current bitmask.
   def to_i
-    mask
+    bitmask
   end
 
   ##
@@ -48,15 +48,15 @@ class BanditMask
   #   end
   #
   #   mask = BanditMask.new 0b01
-  #   mask.names # => [:read]
-  def names
-    self.class.bits.select { |name, _| include? name }.keys
+  #   mask.bits # => [:read]
+  def bits
+    self.class.bits.select { |bit, _| include? bit }.keys
   end
-  alias_method :to_a, :names
+  alias_method :to_a, :bits
 
   ##
-  # Enables the bit named +name+. Returns +self+, so calls to #<< can be
-  # chained. (Think Array#<<.) Raises +ArgumentError+ if +name+ does not
+  # Enables the bit named +bit+. Returns +self+, so calls to #<< can be
+  # chained. (Think Array#<<.) Raises +ArgumentError+ if +bit+ does not
   # correspond to a bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
@@ -66,14 +66,14 @@ class BanditMask
   #
   #   mask = BanditMask.new
   #   mask << :read << :write
-  def <<(name)
-    @mask |= name_to_bit(name)
+  def <<(bit)
+    @bitmask |= bit_value(bit)
     self
   end
 
   ##
-  # Returns true if +name+ is among the currently enabled bits. Returns false
-  # otherwise. Raises +ArgumentError+ if +name+ does not correspond to a bit
+  # Returns true if +bit+ is among the currently enabled bits. Returns false
+  # otherwise. Raises +ArgumentError+ if +bit+ does not correspond to a bit
   # that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
@@ -84,15 +84,15 @@ class BanditMask
   #   mask = BanditMask.new 0b01
   #   mask.include? :read  # => true
   #   mask.include? :write # => false
-  def include?(name)
-    @mask & name_to_bit(name) != 0
+  def include?(bit)
+    bitmask & bit_value(bit) != 0
   end
 
   private
 
-  def name_to_bit(name)
-    self.class.bits.fetch(name) do
-      raise ArgumentError, "undefined bit: #{name.inspect}"
+  def bit_value(bit)
+    self.class.bits.fetch(bit) do
+      raise ArgumentError, "undefined bit: #{bit.inspect}"
     end
   end
 end

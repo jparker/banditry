@@ -14,7 +14,7 @@ class BanditMask
     # derived from +as+, e.g., if +as+ is +:foo+, the reader method will be
     # +:foo+ and the writer will be +:foo=+.
     #
-    # The reader method will call BanditMask#names to get an array of the
+    # The reader method will call BanditMask#bits to get an array of the
     # enabled bit names represented by +attribute+.
     #
     # The writer method will replace the current bitmask with an Integer
@@ -42,13 +42,13 @@ class BanditMask
       class_eval do
         ##
         # A reader method which instances a new BanditMask object and calls
-        # BanditMask#names.
+        # BanditMask#bits.
         define_method wrapper do
-          cls.new(send(attribute)).names
+          cls.new(send(attribute)).bits
         end
 
-        define_method :"#{wrapper}=" do |names|
-          mask = names.reduce(cls.new) { |mask, name| mask << name }
+        define_method :"#{wrapper}=" do |bits|
+          mask = bits.reduce(cls.new) { |mask, bit| mask << bit }
           send :"#{attribute}=", Integer(mask)
         end
 
