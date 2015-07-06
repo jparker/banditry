@@ -60,8 +60,8 @@ class BanditMask
   alias_method :to_a, :names
 
   ##
-  # Enables the bit named +name+. Returns +self+, so calles to #<< can be
-  # chained (think Array#<<). Raises +ArgumentError+ if +name+ does not
+  # Enables the bit named +name+. Returns +self+, so calls to #<< can be
+  # chained. (Think Array#<<.) Raises +ArgumentError+ if +name+ does not
   # correspond to a bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
