@@ -72,9 +72,9 @@ class BanditMask
   end
 
   ##
-  # Returns false if any bit in +bits+ is not enabled. Returns true otherwise.
-  # Raises +ArgumentError+ if +bits+ is empty or if any element in +bits+ does
-  # not correspond to a bit that was previously declared with BanditMask.bit.
+  # Returns true if every bit in +bits+ is enabled and false otherwise. Raises
+  # +ArgumentError+ if +bits+ is empty or if any element in +bits+ does not
+  # correspond to a bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b001

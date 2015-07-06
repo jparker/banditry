@@ -47,23 +47,23 @@ mask = ChmodMask.new current_bitmask
 Enable bits by name.
 
 ```ruby
-mask << :read << :write
+mask << :read << :execute
 ```
 
 Ask whether specific bits are enabled.
 
 ```ruby
 mask.include? :read           # => true
-mask.include? :write          # => true
-mask.include? :execute        # => false
-mask.include? :read, :write   # => true
+mask.include? :write          # => false
+mask.include? :execute        # => true
+mask.include? :read, :write   # => false
 mask.include? :read, :execute # => true
 ```
 
 Retrieve a list of all currently enabled bits.
 
 ```ruby
-mask.bits # => [:read, :write]
+mask.bits # => [:read, :execute]
 ```
 
 In an class with a bitmask attribute, extend `BanditMask::Banditry` and call
