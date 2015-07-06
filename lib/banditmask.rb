@@ -11,12 +11,12 @@ class BanditMask
   ##
   # Returns a Hash mapping all defined names to their respective bits.
   #
-  #   class BanditMask
+  #   class MyMask < BanditMask
   #     bit :read, 0b01
   #     bit :write, 0b10
   #   end
   #
-  #   BanditMask.bits # => { :read => 1, :write => 2 }
+  #   MyMask.bits # => { :read => 1, :write => 2 }
   def self.bits
     @bits ||= {}
   end
@@ -24,19 +24,13 @@ class BanditMask
   ##
   # Maps +name+ to +value+ in the global list of defined bits.
   #
-  #   class BanditMask
+  #   class MyMask < BanditMask
   #     bit :read, 0b001
   #     bit :write, 0b010
   #     bit :execute, 0b100
   #   end
   def self.bit(name, value)
     bits.update name => value
-  end
-
-  ##
-  # Clears all defined bits.
-  def self.reset_bits!
-    @bits = {}
   end
 
   ##
