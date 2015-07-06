@@ -1,8 +1,6 @@
 # BanditMask
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/banditmask`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+BanditMask provides a generic wrapper for working with bitmasks.
 
 ## Installation
 
@@ -22,7 +20,44 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create a class which inherits from BanditMask and declare the available bit
+names and their corresponding values.
+
+```ruby
+class ChmodMask < BanditMask
+  bit :read,    0b001
+  bit :write,   0b010
+  bit :execute, 0b100
+end
+
+ChmodMask.bits # => { :read => 1, :write => 2, :execute => 4 }
+```
+
+To instantiate a new mask class:
+
+```ruby
+mask = ChmodMask.new
+```
+
+Enable bits by name.
+
+```ruby
+mask << :read << :write
+```
+
+Ask whether specific bits are enabled.
+
+```ruby
+mask.include? :read    # => true
+mask.include? :write   # => true
+mask.include? :execute # => false
+```
+
+Retrieve a list of all currently enabled bits.
+
+```ruby
+mask.names # => [:read, :write]
+```
 
 ## Development
 
