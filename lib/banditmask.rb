@@ -1,6 +1,8 @@
 require "banditmask/version"
 
 class BanditMask
+  attr_reader :mask
+
   def initialize(mask = 0b0) # :nodoc:
     @mask = mask
   end
@@ -36,8 +38,6 @@ class BanditMask
     @bits = {}
   end
 
-  attr_reader :mask
-
   ##
   # Returns integer value of current bitmask.
   def to_i
@@ -61,7 +61,8 @@ class BanditMask
 
   ##
   # Enables the bit named +name+. Returns +self+, so calles to #<< can be
-  # chained (think Array#<<).
+  # chained (think Array#<<). Raises +ArgumentError+ if +name+ does not
+  # correspond to a bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b01
@@ -77,7 +78,8 @@ class BanditMask
 
   ##
   # Returns true if +name+ is among the currently enabled bits. Returns false
-  # otherwise.
+  # otherwise. Raises +ArgumentError+ if +name+ does not correspond to a bit
+  # that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b01
@@ -93,9 +95,6 @@ class BanditMask
 
   private
 
-  ##
-  # Translates +name+ to its defined bit value. If +name+ does not match any of
-  # the defined bits it raises ArgumentError.
   def name_to_bit(name)
     self.class.bits.fetch(name) do
       raise ArgumentError, "undefined bit: #{name.inspect}"
