@@ -1,3 +1,3 @@
-module BanditMask
+class BanditMask
   VERSION = "0.1.0"
 end
