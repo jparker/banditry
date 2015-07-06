@@ -74,7 +74,7 @@ class BanditMask
   ##
   # Returns false if any bit in +bits+ is not enabled. Returns true otherwise.
   # Raises +ArgumentError+ if +bits+ is empty or if any element in +bits+ does
-  # not correspond to bit that was previously declared with BanditMask.bit.
+  # not correspond to a bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b001
@@ -97,6 +97,9 @@ class BanditMask
 
   private
 
+  ##
+  # Returns the integer value for the bit named +bit+. Raises +ArgumentError+
+  # if +bit+ has not been previously declared with BanditMask.bit.
   def bit_value(bit)
     self.class.bits.fetch(bit) do
       raise ArgumentError, "undefined bit: #{bit.inspect}"

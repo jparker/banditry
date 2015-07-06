@@ -53,9 +53,11 @@ mask << :read << :write
 Ask whether specific bits are enabled.
 
 ```ruby
-mask.include? :read    # => true
-mask.include? :write   # => true
-mask.include? :execute # => false
+mask.include? :read           # => true
+mask.include? :write          # => true
+mask.include? :execute        # => false
+mask.include? :read, :write   # => true
+mask.include? :read, :execute # => true
 ```
 
 Retrieve a list of all currently enabled bits.
@@ -93,12 +95,15 @@ obj.bits = [:read, :execute]
 obj.bitmask # => 5
 ```
 
-Finally, it gives you a query method for checking whether a particular bit is
+Finally, it gives you a query method for checking whether particular bits are
 set on the bitmask.
 
 ```ruby
-obj.has? :read  # => true
-obj.has? :write # => false
+obj.has? :read           # => true
+obj.has? :write          # => false
+obj.has? :execute        # => true
+obj.has? :read, :write   # => false
+obj.has? :read, :execute # => true
 ```
 
 ## Development
