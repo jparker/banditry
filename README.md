@@ -37,6 +37,9 @@ To instantiate a new mask class:
 
 ```ruby
 mask = ChmodMask.new
+# or
+current_bitmask = 0b001 | 0b010
+mask = ChmodMask.new current_bitmask
 ```
 
 Enable bits by name.
