@@ -61,7 +61,7 @@ mask.include? :execute # => false
 Retrieve a list of all currently enabled bits.
 
 ```ruby
-mask.names # => [:read, :write]
+mask.bits # => [:read, :write]
 ```
 
 In an class with a bitmask attribute, extend `BanditMask::Banditry` and call
@@ -80,7 +80,7 @@ obj = ObjectWithBitmaskAttribute.new
 obj.bitmask = 0b011
 ```
 
-This gives you a reader method which delegates to `BanditMask#names`.
+This gives you a reader method which delegates to `BanditMask#bits`.
 
 ```ruby
 obj.bits # => [:read, :write]
