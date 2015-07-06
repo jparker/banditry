@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-Create a class which inherits from BanditMask and declare the available bit
+Create a class which inherits from `BanditMask` and declare the available bit
 names and their corresponding values.
 
 ```ruby
