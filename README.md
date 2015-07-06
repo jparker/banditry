@@ -1,3 +1,5 @@
+# [![Gem Version](https://badge.fury.io/rb/banditmask.svg)](http://badge.fury.io/rb/banditmask) [![Build Status](https://travis-ci.org/jparker/banditmask.svg?branch=master)](https://travis-ci.org/jparker/banditmask)
+
 # BanditMask
 
 BanditMask provides a generic wrapper for working with bitmasks.
