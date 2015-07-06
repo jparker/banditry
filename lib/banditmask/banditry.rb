@@ -30,11 +30,12 @@ class BanditMask
     #   end
     #
     #   class Thing
-    #     extend BanditMask::Banditry
     #     attr_accessor :bitmask
-    #     mask :bitmask, as: :bits, with: ThingMask
+    #
+    #     extend BanditMask::Banditry
+    #     bandit_mask :bitmask, as: :bits, with: ThingMask
     #   end
-    def mask(attribute, as:, with: BanditMask)
+    def bandit_mask(attribute, as:, with: BanditMask)
       cls = with
       wrapper = as
 

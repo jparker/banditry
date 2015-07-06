@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-Create a class which inherits from `BanditMask` and declare the available bit
+Create a class which inherits from `BanditMask`, and declare the available bit
 names and their corresponding values.
 
 ```ruby
@@ -64,7 +64,8 @@ Retrieve a list of all currently enabled bits.
 mask.names # => [:read, :write]
 ```
 
-Use `BanditMask::Banditry` to add accessor methods to a class that has a
+In an class with a bitmask attribute, extend `BanditMask::Banditry` and call
+`BanditMask::Banditry.bandit_mask` to add accessor methods for working with the
 bitmask attribute.
 
 ```ruby
@@ -72,7 +73,7 @@ class ObjectWithBitmaskAttribute
   attr_accessor :bitmask
 
   extend BanditMask::Banditry
-  mask :bitmask, as: :bits, with: ChmodMask
+  bandit_mask :bitmask, as: :bits, with: ChmodMask
 end
 
 obj = ObjectWithBitmaskAttribute.new
@@ -85,7 +86,7 @@ This gives you a reader method which delegates to `BanditMask#names`.
 obj.bits # => [:read, :write]
 ```
 
-It also gives you a writer method which lets you replace the overwrite bitmask.
+It also gives you a writer method which lets you overwrite the bitmask.
 
 ```ruby
 obj.bits = [:read, :execute]
@@ -102,9 +103,14 @@ obj.has? :write # => false
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To
+release a new version, update the version number in `version.rb`, and then run
+`bundle exec rake release` to create a git tag for the version, push git
+commits and tags, and push the `.gem` file to
+[rubygems.org](https://rubygems.org).
 
 ## Contributing
 
