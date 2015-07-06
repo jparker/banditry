@@ -1,11 +1,5 @@
-require 'forwardable'
-
 class BanditMask
   module Banditry
-    def self.extended(cls) # :nodoc:
-      cls.extend Forwardable
-    end
-
     ##
     # Creates wrapper methods for reading and writing the bitmask stored in
     # +attribute+ using the class +with+. +with+ defaults to BanditMask, but
@@ -52,7 +46,9 @@ class BanditMask
           send :"#{attribute}=", Integer(mask)
         end
 
-        def_delegator wrapper, :include?, :has?
+        define_method :has? do |*bits|
+          cls.new(send(attribute)).include? *bits
+        end
       end
     end
   end

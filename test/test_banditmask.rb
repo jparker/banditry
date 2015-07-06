@@ -68,7 +68,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal [:read, :execute], mask.bits
   end
 
-  def test_include
+  def test_include_with_a_single_bit
     @cls.bit :read, 0b001
     @cls.bit :write, 0b010
     @cls.bit :execute, 0b100
@@ -81,11 +81,33 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_includes mask, :execute
   end
 
+  def test_include_with_multiple_bits
+    @cls.bit :read, 0b001
+    @cls.bit :write, 0b010
+    @cls.bit :execute, 0b100
+
+    mask = @cls.new
+    mask << :read << :execute
+
+    refute mask.include?(:read, :write),
+      "#{mask.inspect} must NOT have :read and :write"
+    assert mask.include?(:read, :execute),
+      "#{mask.inspect} must have :read and :execute"
+  end
+
   def test_include_with_undefined_bit
     mask = @cls.new
 
     assert_raises ArgumentError do
       mask.include? :bogus
+    end
+  end
+
+  def test_include_without_any_arguments
+    mask = @cls.new
+
+    assert_raises ArgumentError do
+      mask.include?
     end
   end
 

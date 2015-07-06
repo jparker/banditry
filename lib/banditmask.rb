@@ -72,20 +72,27 @@ class BanditMask
   end
 
   ##
-  # Returns true if +bit+ is among the currently enabled bits. Returns false
-  # otherwise. Raises +ArgumentError+ if +bit+ does not correspond to a bit
-  # that was previously declared with BanditMask.bit.
+  # Returns false if any bit in +bits+ is not enabled. Returns true otherwise.
+  # Raises +ArgumentError+ if +bits+ is empty or if any element in +bits+ does
+  # not correspond to bit that was previously declared with BanditMask.bit.
   #
   #   class BanditMask
-  #     bit :read, 0b01
-  #     bit :write, 0b10
+  #     bit :read, 0b001
+  #     bit :write, 0b010
+  #     bit :execute, 0b100
   #   end
   #
-  #   mask = BanditMask.new 0b01
-  #   mask.include? :read  # => true
-  #   mask.include? :write # => false
-  def include?(bit)
-    bitmask & bit_value(bit) != 0
+  #   mask = BanditMask.new 0b101
+  #
+  #   mask.include? :read           # => true
+  #   mask.include? :write          # => false
+  #   mask.include? :execute        # => true
+  #
+  #   mask.include? :read, :write   # => false
+  #   mask.include? :read, :execute # => true
+  def include?(*bits)
+    raise ArgumentError, 'wrong number of arguments (0 for 1+)' if bits.empty?
+    bits.all? { |bit| bitmask & bit_value(bit) != 0 }
   end
 
   private

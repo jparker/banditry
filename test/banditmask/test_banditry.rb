@@ -44,5 +44,28 @@ class BanditMask
       obj.perms = [:read, :execute]
       assert_equal 0b101, obj.perm_mask
     end
+
+    def test_query_method_with_a_single_bit
+      @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
+      obj = @cls.new 0b001
+      assert obj.has?(:read), "#{obj.inspect} must have :read"
+      refute obj.has?(:write), "#{obj.inspect} must NOT have :write"
+    end
+
+    def test_query_method_with_multiple_bits
+      @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
+      obj = @cls.new 0b011
+      assert obj.has?(:read, :write), "#{obj.inspect} must have :read and :write"
+      refute obj.has?(:read, :execute), "#{obj.inspect} must NOT have :read and :execute"
+    end
+
+    def test_query_method_with_undefined_bit
+      @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
+      obj = @cls.new 0b001
+
+      assert_raises ArgumentError do
+        obj.has? :bogus
+      end
+    end
   end
 end
