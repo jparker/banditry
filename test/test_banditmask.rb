@@ -47,7 +47,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     _cls = cls
     mask = _cls.new
 
-    assert_kind_of _cls, mask | :read
+    assert_instance_of _cls, mask | :read
   end
 
   def test_bitwise_or_with_undefined_bit
@@ -57,19 +57,40 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_match /undefined bit/, e.message
   end
 
-  def test_bandit_masks_are_equal_if_bitmasks_are_equal
+  def test_bandit_masks_are_equal_if_bitmask_and_class_are_identical
     _cls = cls
     a = _cls.new | :write | :read
     b = _cls.new | :read | :write
+    c = _cls.new | :read
+    d = cls.new | :read | :write
 
     assert_equal a, b
+    refute_equal a, c
+    refute_equal a, d
   end
 
-  def test_bandit_masks_are_not_equal_if_they_are_different_classes
-    a = cls.new | :write | :read
-    b = cls.new | :read | :write
+  def test_bandit_masks_have_identical_hashes_if_bitmask_and_class_are_identical
+    _cls = cls
+    a = _cls.new | :write | :read
+    b = _cls.new | :read | :write
+    c = _cls.new | :read
+    d = cls.new | :read | :write
 
-    refute_equal a, b
+    assert_equal a.hash, b.hash
+    refute_equal a.hash, c.hash
+    refute_equal a.hash, d.hash
+  end
+
+  def test_bandit_masks_are_hash_equal_if_bitmask_and_class_are_identical
+    _cls = cls
+    a = _cls.new | :write | :read
+    b = _cls.new | :read | :write
+    c = _cls.new | :read
+    d = cls.new | :read | :write
+
+    assert a.eql?(b), "Expected #{a.inspect} to be hash-equal to #{b.inspect}"
+    refute a.eql?(c), "Expected #{a.inspect} NOT to be hash-equal to #{c.inspect}"
+    refute a.eql?(d), "Expected #{a.inspect} NOT to be hash-equal to #{d.inspect}"
   end
 
   def test_get_list_of_enabled_bits

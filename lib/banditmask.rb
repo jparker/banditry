@@ -64,8 +64,8 @@ class BanditMask
   #     bit :write, 0b10
   #   end
   #
-  #   mask = MyMask.new
-  #   mask << :read << :write
+  #   mask = MyMask.new       # => #<MyMask:0x007f9ebd44ae40 @bitmask=0>
+  #   mask << :read << :write # => #<MyMask:0x007f9ebd44ae40 @bitmask=3>
   def <<(bit)
     @bitmask |= bit_value(bit)
     self
@@ -81,15 +81,15 @@ class BanditMask
   #     bit :write, 0b10
   #   end
   #
-  #   mask = MyMask.new 0b001
-  #   mask | :write
+  #   mask = MyMask.new 0b01
+  #   mask | :write # => #<MyMask:0x007f9e0bcf5d90 @bitmask=3>
   def |(bit)
-    self.class.new @bitmask | bit_value(bit)
+    self.class.new bitmask | bit_value(bit)
   end
 
   ##
-  # Returns +true+ if +other+ is of the same class as +self+ and the @bitmask
-  # instance variables in both objects are equal.
+  # Returns +true+ if +other+ is an instance of the same class as +self+ and
+  # they have the same bitmask.
   #
   #   class MyMask < BanditMask
   #     bit :read, 0b01
@@ -110,7 +110,16 @@ class BanditMask
   #   a == c # => false
   #   a == d # => false
   def ==(other)
-    other.class == self.class && other.bitmask == @bitmask
+    other.class == self.class && other.bitmask == bitmask
+  end
+
+  alias_method :eql?, :==
+
+  ##
+  # Returns an object hash. Two BanditMask objects have identical hashes if
+  # they have identical bitmasks and are instances of the same class.
+  def hash
+    [bitmask, self.class].hash
   end
 
   ##
