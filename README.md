@@ -22,7 +22,9 @@ Or install it yourself as:
 
 ## Usage
 
-Create a class which inherits from `BanditMask`, and declare the available bit
+### BanditMask
+
+Create a class which inherits from BanditMask, and declare the available bit
 names and their corresponding values.
 
 ```ruby
@@ -66,8 +68,10 @@ Retrieve a list of all currently enabled bits.
 mask.bits # => [:read, :execute]
 ```
 
-In an class with a bitmask attribute, extend `BanditMask::Banditry` and call
-`BanditMask::Banditry.bandit_mask` to add accessor methods for working with the
+### BanditMask::Banditry
+
+In a class with a bitmask attribute, extend BanditMask::Banditry and call
+BanditMask::Banditry.bandit_mask to add accessor methods for working with the
 bitmask attribute.
 
 ```ruby
@@ -82,7 +86,7 @@ obj = ObjectWithBitmaskAttribute.new
 obj.bitmask = 0b011
 ```
 
-This gives you a reader method which delegates to `BanditMask#bits`.
+This gives you a reader method which delegates to BanditMask#bits.
 
 ```ruby
 obj.bits # => [:read, :write]
