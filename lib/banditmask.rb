@@ -4,8 +4,8 @@ require 'banditmask/banditry'
 class BanditMask
   attr_reader :bitmask
 
-  def initialize(bitmask = 0b0) # :nodoc:
-    @bitmask = bitmask
+  def initialize(bitmask = nil) # :nodoc:
+    @bitmask = bitmask || 0b0
   end
 
   ##

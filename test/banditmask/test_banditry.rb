@@ -57,13 +57,22 @@ class BanditMask
       cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = cls.new 0b011
 
-      assert_equal [:read, :write], obj.bits
+      assert_equal TestMask.new(0b011), obj.bits
     end
 
-    def test_writer_method_overwrites_current_bitmask_with_bitmask_for_given_values
+    def test_writer_method_overwrites_current_bitmask_if_given_an_array
       cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = cls.new 0b011
       obj.bits = [:read, :execute]
+
+      assert_equal 0b101, obj.bitmask
+    end
+
+    def test_writer_method_updates_current_bitmask_if_given_bandit_mask
+      cls.bandit_mask :bitmask, as: :bits, with: TestMask
+      obj = cls.new
+      obj.bits |= :read
+      obj.bits |= :execute
 
       assert_equal 0b101, obj.bitmask
     end

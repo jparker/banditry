@@ -83,18 +83,22 @@ class ObjectWithBitmaskAttribute
 end
 
 obj = ObjectWithBitmaskAttribute.new
-obj.bitmask = 0b011
+obj.bitmask = 0b001
 ```
 
-This gives you a reader method which delegates to BanditMask#bits.
+This gives you a reader method which returns the BanditMask representation
+of the bitmask attribute.
 
 ```ruby
-obj.bits # => [:read, :write]
+obj.bits # => #<ChmodMask:0x007f941b9518c8 @bitmask=1>
 ```
 
-It also gives you a writer method which lets you overwrite the bitmask.
+It also gives you a writer method which lets you modify the bitmask. The
+writer accepts BanditMask objects or an Array of bits.
 
 ```ruby
+obj.bits |= :write
+obj.bitmask # => 3
 obj.bits = [:read, :execute]
 obj.bitmask # => 5
 ```
