@@ -42,12 +42,12 @@ class BanditMask
   ##
   # Returns an array of names of the currently enabled bits.
   #
-  #   class BanditMask
+  #   class MyMask < BanditMask
   #     bit :read, 0b01
   #     bit :write, 0b10
   #   end
   #
-  #   mask = BanditMask.new 0b01
+  #   mask = MyMask.new 0b01
   #   mask.bits # => [:read]
   def bits
     self.class.bits.select { |bit, _| include? bit }.keys
@@ -59,12 +59,12 @@ class BanditMask
   # chained. (Think Array#<<.) Raises +ArgumentError+ if +bit+ does not
   # correspond to a bit that was previously defined with BanditMask.bit.
   #
-  #   class BanditMask
+  #   class MyMask < BanditMask
   #     bit :read, 0b01
   #     bit :write, 0b10
   #   end
   #
-  #   mask = BanditMask.new
+  #   mask = MyMask.new
   #   mask << :read << :write
   def <<(bit)
     @bitmask |= bit_value(bit)
@@ -77,11 +77,11 @@ class BanditMask
   # defined by BanditMask.bit.
   #
   #   class MyMask < BanditMask
-  #     bit :read, 0b001
-  #     bit :write, 0b010
+  #     bit :read, 0b01
+  #     bit :write, 0b10
   #   end
   #
-  #   mask = BanditMask.new 0b001
+  #   mask = MyMask.new 0b001
   #   mask | :write
   def |(bit)
     self.class.new @bitmask | bit_value(bit)
@@ -118,13 +118,13 @@ class BanditMask
   # +ArgumentError+ if +bits+ is empty or if any element in +bits+ does not
   # correspond to a bit that was previously defined with BanditMask.bit.
   #
-  #   class BanditMask
+  #   class MyMask < BanditMask
   #     bit :read, 0b001
   #     bit :write, 0b010
   #     bit :execute, 0b100
   #   end
   #
-  #   mask = BanditMask.new 0b101
+  #   mask = MyMask.new 0b101
   #
   #   mask.include? :read           # => true
   #   mask.include? :write          # => false
