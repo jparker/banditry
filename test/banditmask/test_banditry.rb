@@ -14,31 +14,55 @@ class BanditMask
       end
     end
 
-    def test_mask_defines_reader
+    def test_bandit_mask_defines_reader_method
       refute_respond_to @cls.new, :bits
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       assert_respond_to @cls.new, :bits
     end
 
-    def test_mask_defines_writer
+    def test_bandit_mask_defines_writer_method
       refute_respond_to @cls.new, :bits=
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       assert_respond_to @cls.new, :bits=
     end
 
-    def test_mask_defines_query
+    def test_bandit_mask_defines_query_method
       refute_respond_to @cls.new, :bits?
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       assert_respond_to @cls.new, :bits?
     end
 
-    def test_reader_instantiates_bandit_mask_with_current_bitmask
+    def test_bandit_mask_raises_error_if_reader_method_exists
+      def @cls.bits; end
+      e = assert_raises MethodCollisionError do
+        @cls.bandit_mask :bitmask, as: :bits, with: TestMask
+      end
+      assert_equal 'method `bits` already exists', e.message
+    end
+
+    def test_bandit_mask_raises_error_if_writer_method_exists
+      def @cls.bits=; end
+      e = assert_raises MethodCollisionError do
+        @cls.bandit_mask :bitmask, as: :bits, with: TestMask
+      end
+      assert_equal 'method `bits=` already exists', e.message
+    end
+
+    def test_bandit_mask_raises_error_if_query_method_exists
+      def @cls.bits?; end
+      e = assert_raises MethodCollisionError do
+        @cls.bandit_mask :bitmask, as: :bits, with: TestMask
+      end
+      assert_equal 'method `bits?` already exists', e.message
+    end
+
+    def test_reader_method_instantiates_bandit_mask_with_current_bitmask
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = @cls.new 0b011
       assert_equal [:read, :write], obj.bits
     end
 
-    def test_writer_overwrites_current_bitmask_with_bitmask_for_given_values
+    def test_writer_method_overwrites_current_bitmask_with_bitmask_for_given_values
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = @cls.new 0b011
       obj.bits = [:read, :execute]
@@ -55,8 +79,10 @@ class BanditMask
     def test_query_method_with_multiple_bits
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = @cls.new 0b011
-      assert obj.bits?(:read, :write), "#{obj.inspect} must have :read and :write"
-      refute obj.bits?(:read, :execute), "#{obj.inspect} must NOT have :read and :execute"
+      assert obj.bits?(:read, :write),
+        "#{obj.inspect} must have :read and :write"
+      refute obj.bits?(:read, :execute),
+        "#{obj.inspect} must NOT have :read and :execute"
     end
 
     def test_query_method_with_undefined_bit

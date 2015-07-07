@@ -1,4 +1,7 @@
 class BanditMask
+  class MethodCollisionError < StandardError
+  end
+
   module Banditry
     ##
     # Creates wrapper methods for reading, writing, and querying the bitmask
@@ -36,6 +39,18 @@ class BanditMask
       wrapper = as
 
       class_eval do
+        if respond_to? wrapper
+          raise MethodCollisionError, "method `#{wrapper}` already exists"
+        end
+
+        if respond_to? :"#{wrapper}="
+          raise MethodCollisionError, "method `#{wrapper}=` already exists"
+        end
+
+        if respond_to? :"#{wrapper}?"
+          raise MethodCollisionError, "method `#{wrapper}?` already exists"
+        end
+
         ##
         # A reader method which instances a new BanditMask object and calls
         # BanditMask#bits.
