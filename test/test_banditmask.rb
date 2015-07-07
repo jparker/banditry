@@ -1,102 +1,69 @@
 require 'minitest_helper'
 
 class TestBanditMask < Minitest::Test # :nodoc:
-  def setup
-    @cls = Class.new(BanditMask)
-  end
-
   def test_define_bit
-    @cls.bit :read, 0b01
-    assert_equal({ read: 0b01 }, @cls.bits)
-
-    @cls.bit :write, 0b10
-    assert_equal({ read: 0b01, write: 0b10 }, @cls.bits)
+    assert_equal({ read: 0b001, write: 0b010, execute: 0b100 }, cls.bits)
   end
 
   def test_initialize_with_default_mask
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new
+    mask = cls.new
     assert_equal 0, mask.to_i
   end
 
   def test_initialize_with_specific_mask
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new 0b001 | 0b100
+    mask = cls.new 0b001 | 0b100
     assert_equal 0b101, mask.to_i
   end
 
   def test_push_bit_into_mask
-    @cls.bit :read, 0b1
+    mask = cls.new
 
-    mask = @cls.new
-    assert_equal 0, mask.to_i
-
+    assert_equal 0b0, mask.to_i
     mask << :read
     assert_equal 0b1, mask.to_i
   end
 
   def test_push_multiple_bits_into_mask
-    @cls.bit :read, 0b01
-    @cls.bit :write, 0b10
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :write
     assert_equal 0b11, mask.to_i
   end
 
   def test_push_undefined_bit_into_mask
-    mask = @cls.new
+    mask = cls.new
 
     e = assert_raises(ArgumentError) { mask << :bogus }
     assert_match /undefined bit/, e.message
   end
 
   def test_bitwise_or_remembers_original_bitmask
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new 0b001
+    mask = cls.new 0b001
 
     assert_equal 0b011, Integer(mask | :write)
     assert_equal 0b111, Integer(mask | :write | :execute)
   end
 
   def test_bitwise_or_returns_new_instance_of_mask_class
-    @cls.bit :read, 0b1
-    mask = @cls.new
-    assert_kind_of @cls, mask | :read
+    _cls = cls
+    mask = _cls.new
+    assert_kind_of _cls, mask | :read
   end
 
   def test_bitwise_or_with_undefined_bit
-    mask = @cls.new
+    mask = cls.new
 
     e = assert_raises(ArgumentError) { mask | :bogus }
     assert_match /undefined bit/, e.message
   end
 
   def test_get_list_of_enabled_bits
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :execute
     assert_equal [:read, :execute], mask.bits
   end
 
   def test_include_with_a_single_bit
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :execute
 
     assert_includes mask, :read
@@ -105,11 +72,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def test_include_with_multiple_bits
-    @cls.bit :read, 0b001
-    @cls.bit :write, 0b010
-    @cls.bit :execute, 0b100
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :execute
 
     refute mask.include?(:read, :write),
@@ -119,36 +82,38 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def test_include_with_undefined_bit
-    mask = @cls.new
+    mask = cls.new
 
     e = assert_raises(ArgumentError) { mask.include? :bogus }
     assert_match /undefined bit/, e.message
   end
 
   def test_include_without_any_arguments
-    mask = @cls.new
+    mask = cls.new
 
     e = assert_raises(ArgumentError) { mask.include? }
     assert_equal 'wrong number of arguments (0 for 1+)', e.message
   end
 
   def test_coerce_to_integer
-    @cls.bit :read, 0b01
-    @cls.bit :write, 0b10
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :write
 
     assert_equal 0b11, Integer(mask)
   end
 
   def test_coerce_to_array
-    @cls.bit :read, 0b01
-    @cls.bit :write, 0b10
-
-    mask = @cls.new
+    mask = cls.new
     mask << :read << :write
 
     assert_equal [:read, :write], Array(mask)
+  end
+
+  def cls
+    Class.new BanditMask do
+      bit :read, 1 << 0
+      bit :write, 1 << 1
+      bit :execute, 1 << 2
+    end
   end
 end
