@@ -23,7 +23,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal 0b1, mask.to_i
   end
 
-  def test_push_multiple_bits_into_mask
+  def test_push_is_chainable
     mask = cls.new
     mask << :read << :write
     assert_equal 0b11, mask.to_i
@@ -46,6 +46,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
   def test_bitwise_or_returns_new_instance_of_mask_class
     _cls = cls
     mask = _cls.new
+
     assert_kind_of _cls, mask | :read
   end
 
@@ -72,14 +73,12 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def test_get_list_of_enabled_bits
-    mask = cls.new
-    mask << :read << :execute
+    mask = cls.new | :read | :execute
     assert_equal [:read, :execute], mask.bits
   end
 
   def test_include_with_a_single_bit
-    mask = cls.new
-    mask << :read << :execute
+    mask = cls.new | :read | :execute
 
     assert_includes mask, :read
     refute_includes mask, :write
@@ -87,8 +86,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def test_include_with_multiple_bits
-    mask = cls.new
-    mask << :read << :execute
+    mask = cls.new | :read | :execute
 
     refute mask.include?(:read, :write),
       "#{mask.inspect} must NOT have :read and :write"
@@ -111,15 +109,12 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def test_coerce_to_integer
-    mask = cls.new
-    mask << :read << :write
-
+    mask = cls.new | :read | :write
     assert_equal 0b11, Integer(mask)
   end
 
   def test_coerce_to_array
-    mask = cls.new
-    mask << :read << :write
+    mask = cls.new | :read | :write
 
     assert_equal [:read, :write], Array(mask)
   end
