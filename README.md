@@ -99,11 +99,11 @@ Finally, it gives you a query method for checking whether particular bits are
 set on the bitmask.
 
 ```ruby
-obj.has? :read           # => true
-obj.has? :write          # => false
-obj.has? :execute        # => true
-obj.has? :read, :write   # => false
-obj.has? :read, :execute # => true
+obj.bits? :read           # => true
+obj.bits? :write          # => false
+obj.bits? :execute        # => true
+obj.bits? :read, :write   # => false
+obj.bits? :read, :execute # => true
 ```
 
 ## Development

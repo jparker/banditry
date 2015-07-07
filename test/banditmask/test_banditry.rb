@@ -26,10 +26,10 @@ class BanditMask
       assert_respond_to @cls.new, :perms=
     end
 
-    def test_mask_defines_has?
-      refute_respond_to @cls.new, :has?
+    def test_mask_defines_query
+      refute_respond_to @cls.new, :perms?
       @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
-      assert_respond_to @cls.new, :has?
+      assert_respond_to @cls.new, :perms?
     end
 
     def test_reader_instantiates_bandit_mask_with_current_bitmask
@@ -48,15 +48,15 @@ class BanditMask
     def test_query_method_with_a_single_bit
       @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
       obj = @cls.new 0b001
-      assert obj.has?(:read), "#{obj.inspect} must have :read"
-      refute obj.has?(:write), "#{obj.inspect} must NOT have :write"
+      assert obj.perms?(:read), "#{obj.inspect} must have :read"
+      refute obj.perms?(:write), "#{obj.inspect} must NOT have :write"
     end
 
     def test_query_method_with_multiple_bits
       @cls.bandit_mask :perm_mask, as: :perms, with: TestMask
       obj = @cls.new 0b011
-      assert obj.has?(:read, :write), "#{obj.inspect} must have :read and :write"
-      refute obj.has?(:read, :execute), "#{obj.inspect} must NOT have :read and :execute"
+      assert obj.perms?(:read, :write), "#{obj.inspect} must have :read and :write"
+      refute obj.perms?(:read, :execute), "#{obj.inspect} must NOT have :read and :execute"
     end
 
     def test_query_method_with_undefined_bit
@@ -64,7 +64,7 @@ class BanditMask
       obj = @cls.new 0b001
 
       assert_raises ArgumentError do
-        obj.has? :bogus
+        obj.perms? :bogus
       end
     end
   end
