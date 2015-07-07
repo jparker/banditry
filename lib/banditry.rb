@@ -61,24 +61,24 @@ module Banditry
 
   private
 
-  def generate_class_method(virt, mask)
+  def generate_class_method(virt, bandit)
     respond_to? virt and
       raise MethodCollisionError, "method `#{self}.#{virt}` already exists"
 
-    def_single_delegator mask, :bits, virt
+    def_single_delegator bandit, :bits, virt
   end
 
-  def generate_reader(attr, virt, mask)
+  def generate_reader(attr, virt, bandit)
     instance_methods.include? virt and
       raise MethodCollisionError, "method `#{self}##{virt}` already exists"
 
     define_method virt do
       instance_variable_get(:"@#{virt}") ||
-        instance_variable_set(:"@#{virt}", mask.new(send(attr)))
+        instance_variable_set(:"@#{virt}", bandit.new(send(attr)))
     end
   end
 
-  def generate_writer(attr, virt, mask)
+  def generate_writer(attr, virt, bandit)
     instance_methods.include? :"#{virt}=" and
       raise MethodCollisionError, "method `#{self}##{virt}=` already exists"
 
@@ -87,19 +87,19 @@ module Banditry
              when BanditMask
                bits
              else
-               bits.inject(mask.new) { |bm, bit| bm << bit }
+               bits.inject(bandit.new) { |bm, bit| bm << bit }
              end
       send :"#{attr}=", Integer(mask)
       instance_variable_set :"@#{virt}", mask
     end
   end
 
-  def generate_query(attr, virt, mask)
+  def generate_query(attr, virt, bandit)
     instance_methods.include? :"#{virt}?" and
       raise MethodCollisionError, "method `#{self}##{virt}?` already exists"
 
     define_method :"#{virt}?" do |*bits|
-      mask.new(send(attr)).include? *bits
+      bandit.new(send(attr)).include? *bits
     end
   end
 end
