@@ -57,7 +57,7 @@ class BanditMask
   ##
   # Enables the bit named +bit+. Returns +self+, so calls to #<< can be
   # chained. (Think Array#<<.) Raises +ArgumentError+ if +bit+ does not
-  # correspond to a bit that was previously declared with BanditMask.bit.
+  # correspond to a bit that was previously defined with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b01
@@ -72,9 +72,25 @@ class BanditMask
   end
 
   ##
+  # Returns a new instance with the current bitmask plus +bit+. Raises
+  # +ArgumentError+ if +bit+ does not correspond to a bit that was previously
+  # defined by BanditMask.bit.
+  #
+  #   class MyMask < BanditMask
+  #     bit :read, 0b001
+  #     bit :write, 0b010
+  #   end
+  #
+  #   mask = BanditMask.new 0b001
+  #   mask | :write
+  def |(bit)
+    self.class.new @bitmask | bit_value(bit)
+  end
+
+  ##
   # Returns true if every bit in +bits+ is enabled and false otherwise. Raises
   # +ArgumentError+ if +bits+ is empty or if any element in +bits+ does not
-  # correspond to a bit that was previously declared with BanditMask.bit.
+  # correspond to a bit that was previously defined with BanditMask.bit.
   #
   #   class BanditMask
   #     bit :read, 0b001
@@ -99,7 +115,7 @@ class BanditMask
 
   ##
   # Returns the integer value for the bit named +bit+. Raises +ArgumentError+
-  # if +bit+ has not been previously declared with BanditMask.bit.
+  # if +bit+ has not been previously defined with BanditMask.bit.
   def bit_value(bit)
     self.class.bits.fetch(bit) do
       raise ArgumentError, "undefined bit: #{bit.inspect}"

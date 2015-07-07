@@ -31,7 +31,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal 0b101, mask.to_i
   end
 
-  def test_add_value_to_mask
+  def test_push_bit_into_mask
     @cls.bit :read, 0b1
 
     mask = @cls.new
@@ -41,7 +41,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal 0b1, mask.to_i
   end
 
-  def test_add_multiple_values_to_mask
+  def test_push_multiple_bits_into_mask
     @cls.bit :read, 0b01
     @cls.bit :write, 0b10
 
@@ -50,12 +50,34 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal 0b11, mask.to_i
   end
 
-  def test_add_undefined_value_to_mask
+  def test_push_undefined_bit_into_mask
     mask = @cls.new
 
-    e = assert_raises ArgumentError do
-      mask << :bogus
-    end
+    e = assert_raises(ArgumentError) { mask << :bogus }
+    assert_match /undefined bit/, e.message
+  end
+
+  def test_bitwise_or_remembers_original_bitmask
+    @cls.bit :read, 0b001
+    @cls.bit :write, 0b010
+    @cls.bit :execute, 0b100
+
+    mask = @cls.new 0b001
+
+    assert_equal 0b011, Integer(mask | :write)
+    assert_equal 0b111, Integer(mask | :write | :execute)
+  end
+
+  def test_bitwise_or_returns_new_instance_of_mask_class
+    @cls.bit :read, 0b1
+    mask = @cls.new
+    assert_kind_of @cls, mask | :read
+  end
+
+  def test_bitwise_or_with_undefined_bit
+    mask = @cls.new
+
+    e = assert_raises(ArgumentError) { mask | :bogus }
     assert_match /undefined bit/, e.message
   end
 
@@ -99,18 +121,14 @@ class TestBanditMask < Minitest::Test # :nodoc:
   def test_include_with_undefined_bit
     mask = @cls.new
 
-    e = assert_raises ArgumentError do
-      mask.include? :bogus
-    end
+    e = assert_raises(ArgumentError) { mask.include? :bogus }
     assert_match /undefined bit/, e.message
   end
 
   def test_include_without_any_arguments
     mask = @cls.new
 
-    e = assert_raises ArgumentError do
-      mask.include?
-    end
+    e = assert_raises(ArgumentError) { mask.include? }
     assert_equal 'wrong number of arguments (0 for 1+)', e.message
   end
 

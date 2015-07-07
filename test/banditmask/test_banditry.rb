@@ -89,9 +89,7 @@ class BanditMask
       @cls.bandit_mask :bitmask, as: :bits, with: TestMask
       obj = @cls.new 0b001
 
-      assert_raises ArgumentError do
-        obj.bits? :bogus
-      end
+      assert_raises(ArgumentError) { obj.bits? :bogus }
     end
   end
 end
