@@ -1,15 +1,15 @@
-# [![Gem Version](https://badge.fury.io/rb/banditmask.svg)](http://badge.fury.io/rb/banditmask) [![Build Status](https://travis-ci.org/jparker/banditmask.svg?branch=master)](https://travis-ci.org/jparker/banditmask)
+# [![Gem Version](https://badge.fury.io/rb/banditry.svg)](http://badge.fury.io/rb/banditry) [![Build Status](https://travis-ci.org/jparker/banditry.svg?branch=master)](https://travis-ci.org/jparker/banditry)
 
-# BanditMask
+# Banditry
 
-BanditMask provides a generic wrapper for working with bitmasks.
+Banditry provides a generic wrapper for working with bitmasks.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'banditmask'
+gem 'banditry'
 ```
 
 And then execute:
@@ -18,17 +18,17 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install banditmask
+    $ gem install banditry
 
 ## Usage
 
-### BanditMask
+### Banditry::BanditMask
 
-Create a class which inherits from BanditMask, and declare the available bit
-names and their corresponding values.
+Create a class which inherits from Banditry::BanditMask, and declare the
+available bit names and their corresponding values.
 
 ```ruby
-class ChmodMask < BanditMask
+class ChmodMask < Banditry::BanditMask
   bit :read,    0b001
   bit :write,   0b010
   bit :execute, 0b100
@@ -68,17 +68,17 @@ Retrieve a list of all currently enabled bits.
 mask.bits # => [:read, :execute]
 ```
 
-### BanditMask::Banditry
+### Banditry
 
-In a class with a bitmask attribute, extend BanditMask::Banditry and call
-BanditMask::Banditry.bandit_mask to add accessor methods for working with the
-bitmask attribute.
+In a class with a bitmask attribute, extend Banditry and call
+Banditry.bandit_mask to add accessor methods for working with the bitmask
+attribute.
 
 ```ruby
 class ObjectWithBitmaskAttribute
   attr_accessor :bitmask
 
-  extend BanditMask::Banditry
+  extend Banditry
   bandit_mask :bitmask, as: :bits, with: ChmodMask
 end
 
@@ -86,15 +86,15 @@ obj = ObjectWithBitmaskAttribute.new
 obj.bitmask = 0b001
 ```
 
-This gives you a reader method which returns the BanditMask representation
-of the bitmask attribute.
+This gives you a reader method which returns the Banditry::BanditMask
+representation of the bitmask attribute.
 
 ```ruby
 obj.bits # => #<ChmodMask:0x007f941b9518c8 @bitmask=1>
 ```
 
 It also gives you a writer method which lets you modify the bitmask. The
-writer accepts BanditMask objects or an Array of bits.
+writer accepts Banditry::BanditMask objects or an Array of bits.
 
 ```ruby
 obj.bits |= :write
@@ -127,7 +127,7 @@ commits and tags, and push the `.gem` file to
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/banditmask/fork )
+1. Fork it ( https://github.com/jparker/banditry/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

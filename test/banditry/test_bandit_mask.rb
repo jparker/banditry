@@ -141,7 +141,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
   end
 
   def cls
-    Class.new BanditMask do
+    Class.new Banditry::BanditMask do
       bit :read, 1 << 0
       bit :write, 1 << 1
       bit :execute, 1 << 2

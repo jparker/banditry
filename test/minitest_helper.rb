@@ -1,10 +1,10 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'banditmask'
+require 'banditry'
 
 require 'minitest/autorun'
+require 'pry'
 
 begin
-  require 'pry'
   require 'minitest/focus'
   require 'minitest/reporters'
   Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new

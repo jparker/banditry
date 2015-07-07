@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'banditmask/version'
+require 'banditry/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "banditmask"
-  spec.version       = BanditMask::VERSION
+  spec.name          = "banditry"
+  spec.version       = Banditry::VERSION
   spec.authors       = ["John Parker"]
   spec.email         = ["jparker@urgetopunt.com"]
 
   spec.summary       = %q{Generic implementation of a bitmask.}
-  spec.description   = %q{BanditMask provides a generic wrapper class to manage a bitmask attribute.}
-  spec.homepage      = "https://github.com/jparker/banditmask"
+  spec.description   = %q{Banditry provides a generic wrapper class to manage a bitmask attribute. Formerly known as "banditmask".}
+  spec.homepage      = "https://github.com/jparker/banditry"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
