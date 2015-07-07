@@ -1,7 +1,7 @@
 require 'minitest_helper'
 
 class TestBanditMask < Minitest::Test # :nodoc:
-  def test_define_bit
+  def test_bits
     assert_equal({ read: 0b001, write: 0b010, execute: 0b100 }, cls.bits)
   end
 

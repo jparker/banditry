@@ -1,5 +1,6 @@
 require 'banditry/version'
 require 'banditry/bandit_mask'
+require 'forwardable'
 
 module Banditry
   class BanditryError < StandardError
@@ -49,6 +50,9 @@ module Banditry
   #   file.mode_mask       # => 5
   def bandit_mask(attribute, as:, with: BanditMask)
     class_eval do
+      extend SingleForwardable
+
+      generate_class_method as, with
       generate_reader attribute, as, with
       generate_writer attribute, as, with
       generate_query attribute, as, with
@@ -57,38 +61,45 @@ module Banditry
 
   private
 
-  def generate_reader(attr, virt, cls)
+  def generate_class_method(virt, mask)
     respond_to? virt and
-      raise MethodCollisionError, "method `#{virt}` already exists"
+      raise MethodCollisionError, "method `#{self}.#{virt}` already exists"
+
+    def_single_delegator mask, :bits, virt
+  end
+
+  def generate_reader(attr, virt, mask)
+    instance_methods.include? virt and
+      raise MethodCollisionError, "method `#{self}##{virt}` already exists"
 
     define_method virt do
       instance_variable_get(:"@#{virt}") ||
-        instance_variable_set(:"@#{virt}", cls.new(send(attr)))
+        instance_variable_set(:"@#{virt}", mask.new(send(attr)))
     end
   end
 
-  def generate_writer(attr, virt, cls)
-    respond_to? :"#{virt}=" and
-      raise MethodCollisionError, "method `#{virt}=` already exists"
+  def generate_writer(attr, virt, mask)
+    instance_methods.include? :"#{virt}=" and
+      raise MethodCollisionError, "method `#{self}##{virt}=` already exists"
 
     define_method :"#{virt}=" do |bits|
       mask = case bits
              when BanditMask
                bits
              else
-               bits.inject(cls.new) { |bm, bit| bm << bit }
+               bits.inject(mask.new) { |bm, bit| bm << bit }
              end
       send :"#{attr}=", Integer(mask)
       instance_variable_set :"@#{virt}", mask
     end
   end
 
-  def generate_query(attr, virt, cls)
-    respond_to? :"#{virt}?" and
-      raise MethodCollisionError, "method `#{virt}?` already exists"
+  def generate_query(attr, virt, mask)
+    instance_methods.include? :"#{virt}?" and
+      raise MethodCollisionError, "method `#{self}##{virt}?` already exists"
 
     define_method :"#{virt}?" do |*bits|
-      cls.new(send(attr)).include? *bits
+      mask.new(send(attr)).include? *bits
     end
   end
 end
