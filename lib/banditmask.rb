@@ -88,6 +88,32 @@ class BanditMask
   end
 
   ##
+  # Returns +true+ if +other+ is of the same class as +self+ and the @bitmask
+  # instance variables in both objects are equal.
+  #
+  #   class MyMask < BanditMask
+  #     bit :read, 0b01
+  #     bit :write, 0b10
+  #   end
+  #
+  #   class MyOtherMask < BanditMask
+  #     bit :chocolate, 0b01
+  #     bit :vanilla, 0b10
+  #   end
+  #
+  #   a = MyMask.new 0b1
+  #   b = MyMask.new 0b1
+  #   c = MyMask.new 0b0
+  #   d = MyOtherMask.new 0b1
+  #
+  #   a == b # => true
+  #   a == c # => false
+  #   a == d # => false
+  def ==(other)
+    other.class == self.class && other.bitmask == @bitmask
+  end
+
+  ##
   # Returns true if every bit in +bits+ is enabled and false otherwise. Raises
   # +ArgumentError+ if +bits+ is empty or if any element in +bits+ does not
   # correspond to a bit that was previously defined with BanditMask.bit.

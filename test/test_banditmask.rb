@@ -56,6 +56,21 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_match /undefined bit/, e.message
   end
 
+  def test_bandit_masks_are_equal_if_bitmasks_are_equal
+    _cls = cls
+    a = _cls.new | :write | :read
+    b = _cls.new | :read | :write
+
+    assert_equal a, b
+  end
+
+  def test_bandit_masks_are_not_equal_if_they_are_different_classes
+    a = cls.new | :write | :read
+    b = cls.new | :read | :write
+
+    refute_equal a, b
+  end
+
   def test_get_list_of_enabled_bits
     mask = cls.new
     mask << :read << :execute
