@@ -53,9 +53,10 @@ class TestBanditMask < Minitest::Test # :nodoc:
   def test_add_undefined_value_to_mask
     mask = @cls.new
 
-    assert_raises ArgumentError do
+    e = assert_raises ArgumentError do
       mask << :bogus
     end
+    assert_match /undefined bit/, e.message
   end
 
   def test_get_list_of_enabled_bits
@@ -98,17 +99,19 @@ class TestBanditMask < Minitest::Test # :nodoc:
   def test_include_with_undefined_bit
     mask = @cls.new
 
-    assert_raises ArgumentError do
+    e = assert_raises ArgumentError do
       mask.include? :bogus
     end
+    assert_match /undefined bit/, e.message
   end
 
   def test_include_without_any_arguments
     mask = @cls.new
 
-    assert_raises ArgumentError do
+    e = assert_raises ArgumentError do
       mask.include?
     end
+    assert_equal 'wrong number of arguments (0 for 1+)', e.message
   end
 
   def test_coerce_to_integer
