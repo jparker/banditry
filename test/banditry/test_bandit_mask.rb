@@ -140,6 +140,15 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal [:read, :write], Array(mask)
   end
 
+  def test_iterate_over_roles
+    mask = cls.new | :read | :write
+    yielded_values = []
+
+    mask.each { |bit| yielded_values << bit }
+
+    assert_equal [:read, :write], yielded_values
+  end
+
   def cls
     Class.new Banditry::BanditMask do
       bit :read, 1 << 0

@@ -53,6 +53,25 @@ module Banditry
     alias_method :to_a, :bits
 
     ##
+    # Delegates to #bits.
+    #
+    #   class MyMask < Banditry::BanditMask
+    #     bit :read, 0b001
+    #     bit :write, 0b010
+    #     bit :execute, 0b100
+    #   end
+    #
+    #   mask = MyMask.new 0b101
+    #   mask.each do |bit|
+    #     # => :read
+    #     # => :execute
+    #   end
+    #   mask.each # => #<Enumerator: ...>
+    def each(&block)
+      bits.each(&block)
+    end
+
+    ##
     # Enables the bit named +bit+. Returns +self+, so calls to #<< can be
     # chained. (Think Array#<<.) Raises +ArgumentError+ if +bit+ does not
     # correspond to a bit that was previously defined with
