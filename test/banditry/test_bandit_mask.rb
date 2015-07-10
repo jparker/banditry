@@ -136,7 +136,6 @@ class TestBanditMask < Minitest::Test # :nodoc:
 
   def test_coerce_to_array
     mask = cls.new | :read | :write
-
     assert_equal [:read, :write], Array(mask)
   end
 

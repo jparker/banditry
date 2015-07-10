@@ -53,6 +53,8 @@ class TestBanditry < Minitest::Test # :nodoc:
     assert_equal TestMask.new(0b011), obj.perms
   end
 
+  # writer method
+
   def test_bandit_mask_defines_writer_method
     refute_respond_to cls.new, :perms=
     cls.bandit_mask :bitmask, as: :perms, with: TestMask
@@ -67,8 +69,6 @@ class TestBanditry < Minitest::Test # :nodoc:
     end
     assert_equal "method `#{cls}#perms=` already exists", e.message
   end
-
-  # writer method
 
   def test_writer_method_overwrites_current_bitmask_if_given_an_array
     cls.bandit_mask :bitmask, as: :perms, with: TestMask
