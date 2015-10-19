@@ -1,5 +1,7 @@
 module Banditry
   class BanditMask
+    include Enumerable
+
     attr_reader :bitmask
 
     def initialize(bitmask = nil) # :nodoc:
