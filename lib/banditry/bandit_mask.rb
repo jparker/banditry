@@ -134,6 +134,13 @@ module Banditry
     alias_method :eql?, :==
 
     ##
+    # Returns +true+ if bitmask is zero (no bits are enabled) and +false+
+    # otherwise.
+    def empty?
+      bitmask.zero?
+    end
+
+    ##
     # Returns an object hash. Two Banditry::BanditMask objects have identical
     # hashes if they have identical bitmasks and are instances of the same
     # class.

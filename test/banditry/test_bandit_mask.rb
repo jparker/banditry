@@ -98,6 +98,16 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal [:read, :execute], mask.bits
   end
 
+  def test_empty_with_nonzero_bitmask
+    mask = cls.new | :read
+    refute mask.empty?, "#{mask.inspect}#empty? should have been false"
+  end
+
+  def test_empty_with_zero_bitmask
+    mask = cls.new
+    assert mask.empty?, "#{mask.inspect}#empty? should NOT have been false"
+  end
+
   def test_include_with_a_single_bit
     mask = cls.new | :read | :execute
 
