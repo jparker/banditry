@@ -53,6 +53,17 @@ class TestBanditry < Minitest::Test # :nodoc:
     assert_equal TestMask.new(0b011), obj.perms
   end
 
+  def test_reader_method_reinstantiates_bandit_mask_with_current_bitmask_with_reload_argument
+    cls.bandit_mask :bitmask, as: :perms, with: TestMask
+    obj = cls.new 0b011
+
+    assert_equal TestMask.new(0b011), obj.perms
+
+    obj.bitmask = 0b101
+
+    assert_equal TestMask.new(0b101), obj.perms(true)
+  end
+
   # writer method
 
   def test_bandit_mask_defines_writer_method

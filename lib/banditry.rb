@@ -72,9 +72,10 @@ module Banditry
     instance_methods.include? virt and
       raise MethodCollisionError, "method `#{self}##{virt}` already exists"
 
-    define_method virt do
-      instance_variable_get(:"@#{virt}") ||
-        instance_variable_set(:"@#{virt}", bandit.new(send(attr)))
+    define_method virt do |reload = false|
+      reload = true if !instance_variable_defined? :"@#{virt}"
+      instance_variable_set :"@#{virt}", bandit.new(send(attr)) if reload
+      instance_variable_get :"@#{virt}"
     end
   end
 
