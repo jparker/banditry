@@ -30,7 +30,7 @@ module Banditry
     #     bit :execute, 0b100
     #   end
     def self.bit(name, value)
-      bits.update name => value
+      bits.update name.to_sym => value
     end
 
     ##
@@ -181,7 +181,8 @@ module Banditry
     # Returns the integer value for the bit named +bit+. Raises +ArgumentError+
     # if +bit+ has not been previously defined with Banditry::BanditMask.bit.
     def bit_value(bit)
-      self.class.bits.fetch(bit) do
+      bit = bit.to_sym
+      self.class.bits.fetch bit do
         raise ArgumentError, "undefined bit: #{bit.inspect}"
       end
     end

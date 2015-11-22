@@ -23,6 +23,13 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_equal 0b1, mask.to_i
   end
 
+  def test_push_bit_into_mask_using_string_name
+    mask = cls.new
+
+    mask << 'read'
+    assert_equal 0b1, mask.to_i
+  end
+
   def test_push_is_chainable
     mask = cls.new
     mask << :read << :write
@@ -41,6 +48,11 @@ class TestBanditMask < Minitest::Test # :nodoc:
 
     assert_equal 0b011, Integer(mask | :write)
     assert_equal 0b111, Integer(mask | :write | :execute)
+  end
+
+  def test_bitwise_or_with_string_name
+    mask = cls.new 0b001
+    assert_equal 0b011, Integer(mask | 'write')
   end
 
   def test_bitwise_or_returns_new_instance_of_mask_class
@@ -114,6 +126,11 @@ class TestBanditMask < Minitest::Test # :nodoc:
     assert_includes mask, :read
     refute_includes mask, :write
     assert_includes mask, :execute
+  end
+
+  def test_include_with_string_bit
+    mask = cls.new | :read
+    assert_includes mask, 'read'
   end
 
   def test_include_with_multiple_bits
