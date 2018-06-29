@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 require 'banditry/version'
 require 'banditry/bandit_mask'
 require 'forwardable'
@@ -100,7 +102,7 @@ module Banditry
       raise MethodCollisionError, "method `#{self}##{virt}?` already exists"
 
     define_method :"#{virt}?" do |*bits|
-      bandit.new(send(attr)).include? *bits
+      bandit.new(send(attr)).include?(*bits)
     end
   end
 end

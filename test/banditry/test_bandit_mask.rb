@@ -40,7 +40,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     mask = cls.new
 
     e = assert_raises(ArgumentError) { mask << :bogus }
-    assert_match /undefined bit/, e.message
+    assert_match(/undefined bit/, e.message)
   end
 
   def test_bitwise_or_remembers_original_bitmask
@@ -66,7 +66,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     mask = cls.new
 
     e = assert_raises(ArgumentError) { mask | :bogus }
-    assert_match /undefined bit/, e.message
+    assert_match(/undefined bit/, e.message)
   end
 
   def test_bandit_masks_are_equal_if_bitmask_and_class_are_identical
@@ -146,7 +146,7 @@ class TestBanditMask < Minitest::Test # :nodoc:
     mask = cls.new
 
     e = assert_raises(ArgumentError) { mask.include? :bogus }
-    assert_match /undefined bit/, e.message
+    assert_match(/undefined bit/, e.message)
   end
 
   def test_include_without_any_arguments

@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Banditry
   class BanditMask
     include Enumerable
