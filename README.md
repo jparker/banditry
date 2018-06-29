@@ -20,6 +20,9 @@ Or install it yourself as:
 
     $ gem install banditry
 
+NB: Banditry likely works on earlier versions of Ruby, but is only tested
+against versions 2.3 and above.
+
 ## Usage
 
 ### Banditry::BanditMask
